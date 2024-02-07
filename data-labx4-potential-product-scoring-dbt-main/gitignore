@@ -1,0 +1,6 @@
+analyses/
+dbt_packages/
+logs/
+target/
+snapshots/
+.user.yml

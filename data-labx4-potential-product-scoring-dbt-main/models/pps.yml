@@ -1,0 +1,139 @@
+version: 2
+
+sources:
+  - name: cds_parquet
+    schema: cds_parquet
+    tables:
+      - name: d_day 
+      - name: d_sku
+      - name: d_country
+      - name: f_transaction_detail
+      - name: f_currency_exchange
+      - name: f_delivery_detail
+      - name: d_sales_data_material_h
+      - name: sales_organizations_texts
+      - name: d_label_translation
+      - name: d_business_unit
+      - name: f_product_impact_detailed
+      - name: d_hierarchy_supply
+      - name: mtf_exchange_rate
+      - name: d_currency
+      - name: d_reallocated_digital_type
+      - name: d_sku_h
+
+  - name: analytics
+    schema: datalake_analytics
+    tables:
+      - name: piano_analytics_ecommerce 
+      - name: ga_ecommerce
+
+  - name: ods_parquet
+    schema: ods_parquet
+    tables:
+      - name: opv_review__review
+      - name: opv_catalog__product
+
+  - name: silver
+    schema: datalake_silver
+    tables: 
+      - name: store_item_follow
+
+models:
+  - name: f_offline_transactions_history
+    description: "HISTORICAL OFFLINE TRANSACTIONS"
+  - name: f_offline_transactions_current
+    description: "CURRENT OFFLINE TRANSACTIONS (SINCE LAST MONTH)"
+  - name: f_offline_transactions
+    description: "OFFLINE TRANSACTIONS"
+
+  - name: f_online_transactions_history
+    description: "HISTORICAL ONLINE TRANSACTIONS "
+  - name: f_online_transactions_current
+    description: "CURRENT ONLINE TRANSACTIONS (since last month)"
+  - name: f_online_transactions
+    description: "ONLINE TRANSACTIONS an union of the two tables mentionned above"
+
+  - name: f_purchase_review_history
+    description: "HISTORICAL PURCHASE REVIEWS "
+  - name: f_purchase_review_current
+    description: "CURRENT PURCHASE REVIEWS (since last month)"
+  - name: f_purchase_review
+    description: "PURCHASE REVIEWS DATA an union of the two tables mentionned above"
+
+  - name: d_r3_customers_review
+    
+
+  - name: d_lifestage_1
+    
+  
+  - name: d_co2_impact
+
+  - name: d_arbo_dmi
+
+
+
+  - name: f_nb_stores_sold_r3_history
+  
+  - name: f_nb_stores_sold_r3_current
+  
+  - name: f_nb_stores_sold_r3
+    description: "Number of stores that sell a r3_model"
+
+  - name: f_google_analytics
+    description: 'Google analytics'
+
+  - name: f_piano_analytics
+    description: 'Piano analytics'
+
+  - name: f_products_visit_dmi_agg_history
+    
+    
+  - name: f_products_visit_dmi_agg_current
+   
+  - name: f_products_visit_dmi_agg
+   
+
+  - name: f_offline_review_nb_stores_co2_history
+   
+  - name: f_offline_review_nb_stores_co2_current
+   
+  - name: f_offline_review_nb_stores_co2
+    description: "ONLINE TRANSACTIONS an union of the two tables mentionned above"
+
+  - name: d_lifestage_product_weeks
+
+
+  - name: f_dashboard_dataset_history
+
+  - name: f_dashboard_dataset_current
+
+  - name: f_dashboard_dataset
+    description: 'PPS dashboard dataset' 
+    enabled: true
+    columns: 
+      - name: mdl_num_model_r3
+        tests:
+          - not_null
+          
+      - name: is_eco
+        tests: 
+          - accepted_values:
+              values: [0,1]
+
+      - name: co2_eval
+        tests: 
+          - accepted_values:
+              values: [0,1]
+
+      - name: flag_lifestage1
+        tests: 
+          - accepted_values:
+              values: [0,1]
+            
+
+
+
+
+
+          
+            

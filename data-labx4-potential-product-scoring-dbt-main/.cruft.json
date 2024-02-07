@@ -1,0 +1,28 @@
+{
+  "template": "git@github.com:dktunited/dps-dbt-template",
+  "commit": "a9de30e2062890a9ad449cc09040b4aa8371b79b",
+  "checkout": null,
+  "context": {
+    "cookiecutter": {
+      "team_name": "data-labx4",
+      "project_long_name": "potential_product_scoring",
+      "project_name_dashes": "data-labx4-potential-product-scoring-dbt",
+      "project_name_underscores": "data_labx4_potential_product_scoring_dbt",
+      "project_short_description": "Python and SQL boilerplate contains all the boilerplate you need to create a DBT project",
+      "version": "1.0.0-SNAPSHOT",
+      "github_actions_aws_role_preprod_account": "arn:aws:iam::733978486865:role/DATALAB-GITHUBACTIONS-PRD",
+      "github_actions_aws_role_prod_account": "arn:aws:iam::733978486865:role/DATALAB-GITHUBACTIONS-PRD",
+      "databricks_sql_warehouse_explo_dev": "/sql/1.0/warehouses/1ffaa11b12ff67f8",
+      "databricks_sql_warehouse_explo_preprod": "/sql/1.0/warehouses/1ffaa11b12ff67f8",
+      "databricks_sql_warehouse_indus": "/sql/1.0/warehouses/1ffaa11b12ff67f8",
+      "databricks_default_glue_database_dev": "datalab_dev",
+      "databricks_default_glue_database_preprod": "datalab_preprod",
+      "databricks_default_glue_database_prod": "datalab",
+      "wksp_dev_s3_bucket": "dtlb-scripts",
+      "wksp_preprod_s3_bucket": "dtlb-scripts",
+      "wksp_prod_s3_bucket": "dtlb-scripts",
+      "_template": "git@github.com:dktunited/dps-dbt-template"
+    }
+  },
+  "directory": null
+}

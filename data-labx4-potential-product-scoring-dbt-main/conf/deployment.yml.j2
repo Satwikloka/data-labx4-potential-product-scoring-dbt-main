@@ -1,0 +1,164 @@
+# Custom section is used to store configurations that might be repetative.
+# Please read YAML documentation for details on how to use substitutions and anchors.
+custom:
+  basic-cluster-props: &basic-cluster-props
+    spark_version: "10.4.x-cpu-ml-scala2.12"
+
+  basic-static-cluster: &basic-static-cluster
+    new_cluster:
+      <<: *basic-cluster-props
+      num_workers: 1
+      node_type_id: "i3.xlarge"
+      spark_env_vars:
+        OPENLINEAGE_URL: "{{ var['OPENLINEAGE_URL'] }}"
+        OPENLINEAGE_NAMESPACE:  "{{ var['OPENLINEAGE_NAMESPACE'] }}"
+        
+  
+  dependencies: &dependencies
+    libraries: 
+    - pypi:
+        package: "dbt-databricks==1.4.3"
+    - pypi:
+        package: "openlineage-dbt==0.28.0"
+
+build:
+   no_build: true
+
+
+# acl-rules: &acl-rules
+#   access_control_list:
+#     - user_name: "service-principal://SP_Datalab_CI"
+#       permission_level: "IS_OWNER"
+#     - user_name: "service-principal://SP_Datalab_PotentialProductScoring"
+#       permission_level: "CAN_MANAGE_RUN"
+
+environments:
+  staging:
+    workflows:
+      - name: "STAGING-potential-product-scoring-dbt"
+        #<<: *acl-rules
+        format: MULTI_TASK
+        tags:
+          env: staging
+          project: Potential-Product-Scoring
+        job_clusters:
+          - job_cluster_key: "basic-static-cluster"
+            <<: *basic-static-cluster
+        tasks:
+          - task_key: "dbt-run"
+            job_cluster_key: basic-static-cluster
+            <<: *dependencies
+            dbt_task:
+              warehouse_id: "warehouse://dtlb-process-pps"
+              commands:
+                - "dbt debug"
+                - "dbt-ol run --target preprod --profiles-dir ./"
+          - task_key: "dbt-tests"
+            job_cluster_key: basic-static-cluster
+            <<: *dependencies
+            dbt_task:
+              warehouse_id: "warehouse://dtlb-process-pps"
+              commands:
+                -  "dbt test --target preprod --profiles-dir ./"
+            depends_on:
+              - task_key: "dbt-run"
+            
+        git_source: &git_source_staging
+          git_url: "https://github.com/dktunited/data-labx4-potential-product-scoring-dbt"
+          git_provider: "gitHub"
+          git_branch: "main"
+
+      - name: "STAGING-potential-product-scoring-dbt-FULL-REFRESH"
+        format: MULTI_TASK
+        tags:
+          env: staging
+          project: Potential-Product-Scoring
+        job_clusters:
+          - job_cluster_key: "basic-static-cluster"
+            <<: *basic-static-cluster
+        tasks:
+          - task_key: "dbt-run"
+            <<: *dependencies
+            job_cluster_key: basic-static-cluster
+            dbt_task:
+              warehouse_id: "warehouse://dtlb-process-pps"
+              commands:
+                - "dbt debug"
+                - "dbt-ol run --target preprod --profiles-dir ./ --full-refresh"
+          - task_key: "dbt-tests"
+            job_cluster_key: basic-static-cluster
+            <<: *dependencies
+            dbt_task:
+              warehouse_id: "warehouse://dtlb-process-pps"
+              commands:
+                -  "dbt test --target preprod --profiles-dir ./"
+            depends_on:
+              - task_key: "dbt-run"
+        git_source: *git_source_staging
+          
+
+  prod:
+    workflows:
+      - name: "PROD-potential-product-scoring-dbt"
+        format: MULTI_TASK
+        tags:
+          env: production
+          project: Potential-Product-Scoring
+        job_clusters:
+          - job_cluster_key: "basic-static-cluster"
+            <<: *basic-static-cluster
+        tasks:
+          - task_key: "dbt-run"
+            <<: *dependencies
+            job_cluster_key: basic-static-cluster
+            dbt_task:
+              warehouse_id: "warehouse://dtlb-process-pps"
+              commands:
+                - "dbt debug"
+                - "dbt-ol run --target prod --profiles-dir ./"
+          - task_key: "dbt-tests"
+            job_cluster_key: basic-static-cluster
+            <<: *dependencies
+            dbt_task:
+              warehouse_id: "warehouse://dtlb-process-pps"
+              commands:
+                -  "dbt test --target prod --profiles-dir ./"
+            depends_on:
+              - task_key: "dbt-run"
+        git_source: &git_source
+          git_url: "https://github.com/dktunited/data-labx4-potential-product-scoring-dbt"
+          git_provider: "gitHub"
+          git_tag: "1.3.0"
+      - name: "PROD-potential-product-scoring-dbt-FULL-REFRESH"
+        #<<: *acl-rules
+        format: MULTI_TASK
+        tags:
+          env: production
+          project: Potential-Product-Scoring
+        job_clusters:
+          - job_cluster_key: "basic-static-cluster"
+            <<: *basic-static-cluster
+        tasks:
+          - task_key: "dbt-run"
+            <<: *dependencies
+            job_cluster_key: basic-static-cluster
+            dbt_task:
+              warehouse_id: "warehouse://dtlb-process-pps"
+              commands:
+                - "dbt debug"
+                - "dbt-ol run --target prod --profiles-dir ./ --full-refresh"
+          - task_key: "dbt-tests"
+            job_cluster_key: basic-static-cluster
+            <<: *dependencies
+            dbt_task:
+              warehouse_id: "warehouse://dtlb-process-pps"
+              commands:
+                # -  "dbt deps"
+                -  "dbt test --target prod --profiles-dir ./"
+            depends_on:
+              - task_key: "dbt-run"
+        git_source: *git_source
+
+  
+
+  

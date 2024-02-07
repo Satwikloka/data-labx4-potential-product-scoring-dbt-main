@@ -1,0 +1,31 @@
+{
+    "environments": {
+        "default": {
+            "profile": "DEFAULT",
+            "storage_type": "mlflow",
+            "properties": {
+                "workspace_directory": "/Shared/dbx/projects/data-labx4-potential-product-scoring-dbt",
+                "artifact_location": "dbfs:/dbx/data-labx4-potential-product-scoring-dbt"
+            }
+        },
+        "staging": {
+            "profile": "staging",
+            "storage_type": "mlflow",
+            "properties": {
+                "workspace_directory": "/Shared/dbx/projects/potential_product_scoring_dbt/staging",
+                "artifact_location": "dbfs:/Shared/dbx/projects/potential_product_scoring_dbt/staging"
+            }
+        },
+        "prod": {
+            "profile": "prod",
+            "storage_type": "mlflow",
+            "properties": {
+                "workspace_directory": "/Shared/dbx/projects/potential_product_scoring_dbt/prod",
+                "artifact_location": "dbfs:/Shared/dbx/projects/potential_product_scoring_dbt/prod"
+            }
+        }
+    },
+    "inplace_jinja_support": false,
+    "failsafe_cluster_reuse_with_assets": false,
+    "context_based_upload_for_execute": false
+}

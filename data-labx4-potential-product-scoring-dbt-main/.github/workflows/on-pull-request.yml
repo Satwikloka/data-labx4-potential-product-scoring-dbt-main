@@ -1,0 +1,40 @@
+name: Pull Request - Build and test dbt code 
+on: 
+  pull_request: {branches: [main]}
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  compile_tests:
+    timeout-minutes: 10
+    runs-on: decathlon
+    env:
+      DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+      DATABRICKS_TOKEN:  ${{ secrets.DATABRICKS_TOKEN }}
+      DBT_ACCESS_TOKEN: ${{secrets.DBT_ACCESS_TOKEN}}
+    steps:
+      - name: pre/post clean
+        uses: dktunited/.github/actions/cleaner@main
+
+      - name: Checkout 🛎️
+        uses: actions/checkout@v2.3.1
+      
+      - name: Set up Python 3.9 🐍
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.9
+      
+      - name: Install dependencies
+        run: |
+         pip install dbt-databricks==1.4.3
+
+      - name: Prepare databricks profile 🔑
+        run: |
+          echo "[datalab-ci]" >> ~/.databrickscfg
+          echo "host = $DATABRICKS_HOST" >> ~/.databrickscfg
+          echo "token = $DATABRICKS_TOKEN" >> ~/.databrickscfg
+      - name: Compile
+        run: | 
+          dbt compile

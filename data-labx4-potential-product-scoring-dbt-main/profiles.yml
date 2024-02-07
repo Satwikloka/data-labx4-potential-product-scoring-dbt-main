@@ -1,0 +1,28 @@
+datalab:
+
+  target: dev
+  outputs:
+    dev:
+      type: databricks
+      schema: potential_product_scoring_dev
+      host: "decathlon-datalab.cloud.databricks.com"
+      http_path: /sql/1.0/warehouses/68146bcb93ff09e7
+      token:  "{{ env_var('DBT_ACCESS_TOKEN') }}"  # NEVER write token directly in this file !
+      threads: 4
+
+    preprod:
+      type: databricks
+      #method: http
+      schema: potential_product_scoring_preprod
+      host: "decathlon-datalab.cloud.databricks.com"
+      http_path: /sql/1.0/warehouses/68146bcb93ff09e7
+      token:  "{{ env_var('DBT_ACCESS_TOKEN') }}"  # NEVER write token directly in this file !
+      threads: 4
+
+    prod:
+      type: databricks
+      schema: potential_product_scoring
+      host: "decathlon-datalab.cloud.databricks.com"
+      http_path: /sql/1.0/warehouses/68146bcb93ff09e7
+      token:  "{{ env_var('DBT_ACCESS_TOKEN') }}"   # NEVER write token directly in this file !
+      threads: 4

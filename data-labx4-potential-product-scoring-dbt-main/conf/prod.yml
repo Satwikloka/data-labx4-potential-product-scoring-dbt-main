@@ -1,0 +1,2 @@
+OPENLINEAGE_URL: "https://ol-preprod.dktapp.cloud"
+OPENLINEAGE_NAMESPACE: "dbt"

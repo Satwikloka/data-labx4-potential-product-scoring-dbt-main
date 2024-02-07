@@ -1,0 +1,2 @@
+dbt-databricks==1.7.1
+awscli==1.25.9
